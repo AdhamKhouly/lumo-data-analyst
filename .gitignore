@@ -1,0 +1,22 @@
+# secrets
+.env
+
+# the database is rebuilt from data/ with `python -m src.ingest`
+*.duckdb
+*.duckdb.wal
+
+# python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# editors / OS
+.DS_Store
+.idea/
+.vscode/
+
+# local notes and logs
+logs/
+*.log
