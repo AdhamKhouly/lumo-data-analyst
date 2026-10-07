@@ -166,11 +166,10 @@ tests/           pytest suite (python -m pytest)
 
 - Only 14 weekly observations. Every correlation and regression is exploratory, and most
   metrics grew over the simulation, so many things look related just because they all went up.
-- Scenario results depend on the assumptions listed in each result, above all the price
-  elasticity. They are sensitivity checks, not predictions.
-- The whole thing was built around one simulation's reports. Another dataset would need
-  its own parsers.
-- The simulation's internal rules (how demand, waits and competitors behave) are unknown
-  to the model.
-- The chat and the bot need an Anthropic API key and, for Discord, a bot application. Both
-  run locally and the bot only works while the process is running.
+
+## 🧑‍💻 Author
+
+**Adham Elkhouly**
+
+- MSBA Student @ Boston University
+- Microsoft Power Platform Functional Consultant Associate
