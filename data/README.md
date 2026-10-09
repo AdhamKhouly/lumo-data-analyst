@@ -7,7 +7,8 @@ that week.
 The files are anonymized copies. The team names were replaced consistently (our cafe is
 **Cafe A**; the other teams are Cafe B to Cafe I; two unused team slots are numbered), and
 the workbook metadata was cleared. Nothing numeric was changed. The script that produced
-them is `scripts/anonymize_workbooks.py`.
+them is `scripts/anonymize_workbooks.py`. What each parser looks for in these files, and
+the database tables they are loaded into, is described in [docs/DATA_FORMAT.md](../docs/DATA_FORMAT.md).
 
 ## Report types
 

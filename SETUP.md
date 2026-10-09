@@ -5,9 +5,9 @@
 Python 3.11 or newer.
 
 ```bash
-git clone <this repository>
+git clone https://github.com/AdhamKhouly/lumo-data-analyst.git
 cd lumo-data-analyst
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
@@ -100,6 +100,33 @@ python scripts/make_charts.py
 Regenerates the three images in `assets/` from the data in `data/` (it uses `lumo.duckdb`
 if it exists, otherwise it parses the workbooks into memory).
 
+## 8. Keeping the bot running
+
+`python -m src.discord_bot` runs in the foreground and the bot goes offline when that
+process stops, when the terminal closes, or when the machine reboots. For everyday use that
+is fine: start it when you need it. If you want it to stay up, have the operating system
+start it for you. This repository does not include those files, but each is a few lines:
+
+- **macOS:** a LaunchAgent, a small `.plist` in `~/Library/LaunchAgents/` whose
+  `ProgramArguments` run `.venv/bin/python -m src.discord_bot` with `WorkingDirectory` set
+  to the project folder and `KeepAlive` on. It starts at login and restarts on failure.
+- **Linux:** a `systemd` user service with `ExecStart=/path/to/.venv/bin/python -m src.discord_bot`,
+  `WorkingDirectory=/path/to/lumo-data-analyst` and `Restart=on-failure`, enabled with
+  `systemctl --user enable --now lumo`.
+- **Windows:** a Task Scheduler task that runs `.venv\Scripts\python.exe -m src.discord_bot`
+  from the project folder at log-on.
+
+In all three cases the `.env` file is read from the working directory, so set that to the
+project folder. Stop the service before running `python -m src.ingest`, since only one
+process can write the database at a time.
+
+## 9. Database and data locations
+
+By default the reports are read from `data/` and the database is `lumo.duckdb`, both in the
+project folder. `python -m src.ingest --data <folder> --db <file>` changes that for one
+run. The `LUMO_DATA_DIR` and `LUMO_DB_PATH` environment variables change the defaults for
+every command (set them in the shell; they are read at import time, before `.env` is loaded).
+
 ## Troubleshooting
 
 | Problem | What to do |
@@ -108,5 +135,6 @@ if it exists, otherwise it parses the workbooks into memory).
 | `DISCORD_BOT_TOKEN is not set` | copy `.env.example` to `.env` and fill it in |
 | Discord says the intent is missing | enable *Message Content Intent* on the Bot tab |
 | the bot ignores messages in a server | @mention it, or add the channel to `DISCORD_CHANNEL_IDS`; check it has *View Channel* permission |
-| `anthropic.AuthenticationError` | check `ANTHROPIC_API_KEY` in `.env` |
+| `Could not resolve authentication method` | `ANTHROPIC_API_KEY` is not set: copy `.env.example` to `.env` and add your key |
+| `anthropic.AuthenticationError` | the key in `.env` is wrong or revoked |
 | DuckDB "lock" error | only one process can write the database; stop the bot before running ingest, or vice versa |
